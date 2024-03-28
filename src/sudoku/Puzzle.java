@@ -19,7 +19,12 @@ public class Puzzle {
     // This method shall set (or update) the arrays numbers and isGiven
     public void newPuzzle(int cellsToGuess) {
         // I hardcode a puzzle here for illustration and testing.
-        // [TODO EX] Remove hardcode, generate puzzles
+        // [TODO EX] Remove hardcode puzzle and generate new puzzles every game
+
+        // [TODO EX1] Generate a complete solved puzzle from scratch
+
+        // Row by row, insert number in each col, ensuring no number is repeated in the row
+        // AND in the col
         int[][] hardcodedNumbers =
             {{5, 3, 4, 6, 7, 8, 9, 1, 2},
             {6, 7, 2, 1, 9, 5, 3, 4, 8},
@@ -40,6 +45,7 @@ public class Puzzle {
 
         // Need to use input parameter cellsToGuess!
         // Hardcoded for testing, only 2 cells of "8" is NOT GIVEN
+        // [TODO EX2 Randomize which cells is given]
         boolean[][] hardcodedIsGiven =
             {{true, true, true, true, true, false, true, true, true},
             {true, true, true, true, true, true, true, true, false},

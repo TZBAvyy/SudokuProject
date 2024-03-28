@@ -102,8 +102,7 @@ public class GameBoardPanel extends JPanel {
             *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
             */
             if (isSolved()) {
-                JFrame pane = new JFrame();
-                JOptionPane.showMessageDialog(pane, "Congratulations, you won!");
+                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
             }
         }
     }
