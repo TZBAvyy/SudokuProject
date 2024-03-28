@@ -19,7 +19,7 @@ public class Puzzle {
     // This method shall set (or update) the arrays numbers and isGiven
     public void newPuzzle(int cellsToGuess) {
         // I hardcode a puzzle here for illustration and testing.
-        // [TODO] Remove hardcode, generate puzzles
+        // [TODO EX] Remove hardcode, generate puzzles
         int[][] hardcodedNumbers =
             {{5, 3, 4, 6, 7, 8, 9, 1, 2},
             {6, 7, 2, 1, 9, 5, 3, 4, 8},
