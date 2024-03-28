@@ -30,11 +30,11 @@ public class GameBoardPanel extends JPanel {
             }
         }
 
-        // Allocate a common listener as the ActionEvent listener for all the
+        // DONE Allocate a common listener as the ActionEvent listener for all the
         //  Cells (JTextFields)
         CellInputListener listener = new CellInputListener();
 
-        // Adds this common listener to all editable cells
+        // DONE Adds this common listener to all editable cells
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 if (cells[row][col].isEditable()) {
@@ -77,36 +77,34 @@ public class GameBoardPanel extends JPanel {
         return true;
     }
 
-    // Define a Listener Inner Class for all the editable Cells
+    // DONE Define a Listener Inner Class for all the editable Cells
     private class CellInputListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-           // Get a reference of the JTextField that triggers this action event
-           Cell sourceCell = (Cell)e.getSource();
-           
-           // Retrieve the int entered
-           int numberIn = Integer.parseInt(sourceCell.getText());
-           // For debugging
-           System.out.println("You entered " + numberIn + " at (" + (sourceCell.row+1) + "," + (sourceCell.col+1) + ")");
+            // Get a reference of the JTextField that triggers this action event
+            Cell sourceCell = (Cell)e.getSource();
+            
+            // Retrieve the int entered
+            int numberIn = Integer.parseInt(sourceCell.getText());
+            // For debugging
+            System.out.println("You entered " + numberIn + " at (" + (sourceCell.row+1) + "," + (sourceCell.col+1) + ")");
+    
+            // DONE
+            if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
+               sourceCell.status = CellStatus.CORRECT_GUESS;
+            } else {                            //Update the cell status sourceCell.status
+               sourceCell.status = CellStatus.WRONG_GUESS;
+            }
+            sourceCell.paint();   // re-paint this cell based on its status
   
-           /*
-            * [TODO 5] 
-            * Check the numberIn against sourceCell.number.
-            * Update the cell status sourceCell.status,
-            * and re-paint the cell via sourceCell.paint().
-            */
-            //if (numberIn == sourceCell.number) {
-            //   sourceCell.status = CellStatus.CORRECT_GUESS;
-            //} else {
-            //   ......
-            //}
-            //sourceCell.paint();   // re-paint this cell based on its status
-  
-           /*
-            * [TODO 6] (later)
+            /* DONE
             * Check if the player has solved the puzzle after this move,
             *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
             */
+            if (isSolved()) {
+                JFrame pane = new JFrame();
+                JOptionPane.showMessageDialog(pane, "Congratulations, you won!");
+            }
         }
     }
 }
