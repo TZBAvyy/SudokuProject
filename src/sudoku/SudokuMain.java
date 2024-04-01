@@ -10,6 +10,7 @@ public class SudokuMain extends JFrame {
     // private variables
     GameBoardPanel board = new GameBoardPanel();
     JButton btnNewGame = new JButton("New Game");
+    SudokuDifficulty difficulty = SudokuDifficulty.NORMAL; //Standard difficulty == NORMAL
 
     // Constructor
     public SudokuMain() {
@@ -22,7 +23,7 @@ public class SudokuMain extends JFrame {
         // ......
 
         // Initialize the game board to start the game
-        board.newGame();
+        board.newGame(difficulty);
 
         pack();     // Pack the UI components, instead of using setSize()
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // to handle window-closing

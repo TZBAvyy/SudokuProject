@@ -50,10 +50,19 @@ public class GameBoardPanel extends JPanel {
         * Generate a new puzzle; and reset the game board of cells based on the puzzle.
         * You can call this method to start a new game.
         */
-    public void newGame() {
-        // Generate a new puzzle
-        puzzle.newPuzzle(2);
-
+    public void newGame(SudokuDifficulty difficulty) {
+        // Generate a new puzzle based on difficulty
+        if (difficulty==SudokuDifficulty.EASY) {
+            //Easy difficulty gives 51 cells as clues
+            puzzle.newPuzzle(30);
+        } else if (difficulty==SudokuDifficulty.NORMAL) {
+            //Easy difficulty gives 41 cells as clues
+            puzzle.newPuzzle(40);
+        } else if (difficulty==SudokuDifficulty.HARD) {
+            //Easy difficulty gives 31 cells as clues
+            puzzle.newPuzzle(50);
+        } 
+        
         // Initialize all the 9x9 cells, based on the puzzle.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {

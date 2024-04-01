@@ -35,7 +35,7 @@ public class Puzzle {
         numbers = shuffle(template);         
         
         //Generates the coordinates to be given
-        int[][] givenCoor = generateClues(40);
+        int[][] givenCoor = generateClues(81-cellsToGuess);
 
         //Set isGiven array to match the coordinates in given coordinates (givenCoor)
         //[TODO EX3] Make a backtracking solver for sudoku
@@ -131,18 +131,6 @@ public class Puzzle {
         }
 
         return clues;
-    }
-
-    //TODO ERASE WHEN COMPLETED
-    public static void main(String[] args) {
-        Puzzle p = new Puzzle();
-        p.newPuzzle(0);
-        for (int row=0; row<9; row++) {
-            for (int col=0; col<9; col++) {
-                System.out.print(String.format("%b ", p.isGiven[row][col]));
-            }
-            System.out.println();
-        }
     }
 
     //(For advanced students) use singleton design pattern for this class
