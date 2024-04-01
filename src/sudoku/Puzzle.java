@@ -1,7 +1,5 @@
 package sudoku;
 
-import java.lang.reflect.Array;
-
 /**
  * The Sudoku number puzzle to be solved
  */
@@ -36,24 +34,17 @@ public class Puzzle {
         //This generates an almost completely randomised new puzzle
         numbers = shuffle(template);         
         
-        // [TODO EX2 Randomize which cells is given]
-        boolean[][] hardcodedIsGiven =
-            {{true, true, true, true, true, false, true, true, true},
-            {true, true, true, true, true, true, true, true, false},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true},
-            {true, true, true, true, true, true, true, true, true}};
+        //Generates the coordinates to be given
+        int[][] givenCoor = generateClues(40);
 
-        // Copy from hardcodedIsGiven into array "isGiven"
-        for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
-            for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-                isGiven[row][col] = hardcodedIsGiven[row][col];
-            }
+        //Set isGiven array to match the coordinates in given coordinates (givenCoor)
+        //[TODO EX3] Make a backtracking solver for sudoku
+        //[TODO EX4] Use solver to ensure only 1 solution for puzzle 
+        for (int[] coordinate : givenCoor) {
+            isGiven[coordinate[0]][coordinate[1]] = true;
         }
+        
+
     }
 
     //Sudoku shuffler
@@ -62,10 +53,19 @@ public class Puzzle {
     public int[][] shuffle(int[][] sudoku) {
         //Shuffles original rows first
         int[][] result = shuffleRows(sudoku);
+
         //Flips the puzzle rows to be its cols and its cols to be rows
-        int[][] flipped = flip(result);
+        int[][] flippedResult = new int[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
+
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; row++) {
+            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; col++) {
+                flippedResult[row][col] = result[col][row];
+            }
+        }
+
         //Shuffles the new rows (originally cols)
-        result = shuffleRows(flipped);
+        result = shuffleRows(flippedResult);
+
         return result;
     }
 
@@ -76,49 +76,74 @@ public class Puzzle {
         int randomPos;
         int[] row;
 
-        for (int range=0 ; range < SudokuConstants.GRID_SIZE ; range += SudokuConstants.GRID_SIZE/3) {
-            for (int indexInRange=0 ; indexInRange < SudokuConstants.GRID_SIZE/3 ; indexInRange++ ) {
-                //Gets the first row of the input sudoku puzzle
-                row = sudoku[indexInRange+range]; 
+        for (int boxIndex=0 ; boxIndex < SudokuConstants.GRID_SIZE ; boxIndex += SudokuConstants.GRID_SIZE/3) {
+            for (int boxRow=0 ; boxRow < SudokuConstants.GRID_SIZE/3 ; boxRow++ ) {
+                //Gets the row of the input sudoku puzzle
+                //boxIndex is the first index of each box in the puzzle
+                //boxRow is the row of each box
+                row = sudoku[boxRow+boxIndex]; 
 
                 //(int)(Math.random()*3) gives random number between [0,2] inclusive
-                randomPos = (int)(Math.random()*3)+range;
+                randomPos = (int)(Math.random()*3)+boxIndex;
 
-                if (indexInRange==0) {
+                if (boxRow==0) {
                     //IF index in range is 0 (i.e. for range (3-5)), put row in any random position
                     result[randomPos] = row;
                 } else {
                     //IF index is range > 0, ensure row is empty before inserting
                     while (result[randomPos][0] != 0) { //int in 1st col is 0 if empty
                         //Rerolls the randomPos until it finds an empty
-                        randomPos = (int)(Math.random()*(range+3));
+                        randomPos = (int)(Math.random()*3)+boxIndex;
                     }
                     //Inserts row in random position that is empty
                     result[randomPos] = row;
                 }
             }
         }
-
         return result;
     }
 
-    //Flips sudoku puzzle 
-    //Rows -> Col, Col -> Rows
-    public int[][] flip(int[][] sudoku) {
-        int[][] result = new int[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
+    public int[][] generateClues(int numberOfClues) {
+        int[][] coordinates = new int[SudokuConstants.GRID_SIZE*SudokuConstants.GRID_SIZE][2];
+        int[][] clues = new int[numberOfClues][2];
+        int randomPos;
 
-        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; row++) {
+        //Populate coordinates array
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE*SudokuConstants.GRID_SIZE ; row += 9) {
             for (int col=0 ; col < SudokuConstants.GRID_SIZE ; col++) {
-                result[row][col] = sudoku[col][row];
+                coordinates[row+col][0] = row/9;
+                coordinates[row+col][1] = col;
             }
         }
 
-        return result;
+        for (int index=0 ; index < numberOfClues ; index++) {
+            randomPos = (int)(Math.random()*(SudokuConstants.GRID_SIZE*SudokuConstants.GRID_SIZE));
+
+            //Checks if current random coordinates has been used
+            //Rerolls randomPos if coordinates has been used (aka has been inserted into clues)
+            while (coordinates[randomPos][0]==-1) {
+                randomPos = (int)(Math.random()*(SudokuConstants.GRID_SIZE*SudokuConstants.GRID_SIZE));
+            }
+
+            clues[index][0] = coordinates[randomPos][0];
+            clues[index][1] = coordinates[randomPos][1];
+            coordinates[randomPos][0] = -1; //INDICATE THAT COOR HAS BEEN USED
+        }
+
+        return clues;
     }
 
-
-
-
+    //TODO ERASE WHEN COMPLETED
+    public static void main(String[] args) {
+        Puzzle p = new Puzzle();
+        p.newPuzzle(0);
+        for (int row=0; row<9; row++) {
+            for (int col=0; col<9; col++) {
+                System.out.print(String.format("%b ", p.isGiven[row][col]));
+            }
+            System.out.println();
+        }
+    }
 
     //(For advanced students) use singleton design pattern for this class
 }

@@ -70,7 +70,7 @@ public class GameBoardPanel extends JPanel {
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
-                return false;
+                    return false;
                 }
             }
         }
@@ -91,9 +91,9 @@ public class GameBoardPanel extends JPanel {
     
             // DONE
             if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
-               sourceCell.status = CellStatus.CORRECT_GUESS;
+                sourceCell.status = CellStatus.CORRECT_GUESS;
             } else {                            //Update the cell status sourceCell.status
-               sourceCell.status = CellStatus.WRONG_GUESS;
+                sourceCell.status = CellStatus.WRONG_GUESS;
             }
             sourceCell.paint();   // re-paint this cell based on its status
   
