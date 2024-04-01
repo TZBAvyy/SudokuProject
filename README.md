@@ -9,8 +9,11 @@ Code Written by Avisena Gibraltar: {
     Listener Inner Class for all the editable Cells
     Allocate a common listener as the ActionEvent listener for all the Cells (JTextFields)
     Adds this common listener to all editable cells
-    Add a button to the south to re-start the game via board.newGame()
+    Add a button to the south to re-start the game via board.newGame() [TODO]
     Remove hardcoded puzzle, generate puzzles from scratch
+    Added code to generate which squares to be given
+    Added solver using backtracking algorithm to ensure puzzle has only 1 unique solution [TODO]
+    Added difficulty by giving variable number of squares as clues [TODO]
 
 }
 
