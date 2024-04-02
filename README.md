@@ -2,6 +2,7 @@
 ## Mini-Project 1: Sudoku
 
 Base Structure of Code written by Professor Chua Hock Chuan
+from https://www3.ntu.edu.sg/home/ehchua/programming/java/JavaGame_Sudoku.html
 
 Code Written by Avisena Gibraltar: {
 
