@@ -8,7 +8,7 @@ public class Puzzle {
     // The numbers on the puzzle
     int[][] numbers = new int[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
     // The clues - isGiven (no need to guess) or need to guess
-    boolean[][] isGiven = new boolean[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
+    boolean[][] isGiven;
 
     // Constructor
     public Puzzle() {
@@ -19,6 +19,9 @@ public class Puzzle {
     // to control the difficulty level.
     // This method shall set (or update) the arrays numbers and isGiven
     public void newPuzzle(int cellsToGuess) {
+        //Initialise isGiven in newPuzzle to reset puzzle every time newPuzzle is run
+        isGiven = new boolean[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
+        
         int[][] template =
             {{5, 3, 4, 6, 7, 8, 9, 1, 2},
             {6, 7, 2, 1, 9, 5, 3, 4, 8},

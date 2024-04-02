@@ -1,5 +1,8 @@
 package sudoku;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 /**
  * The main Sudoku program
@@ -9,7 +12,9 @@ public class SudokuMain extends JFrame {
 
     // private variables
     GameBoardPanel board = new GameBoardPanel();
-    JButton btnNewGame = new JButton("New Game");
+    JButton btnNewGame, btnChangeDiff;
+    JPanel miscPanel = new JPanel();
+    JLabel difficultyLabel;
     SudokuDifficulty difficulty = SudokuDifficulty.NORMAL; //Standard difficulty == NORMAL
 
     // Constructor
@@ -19,8 +24,26 @@ public class SudokuMain extends JFrame {
 
         cp.add(board, BorderLayout.CENTER);
 
-        // [TODO EX] Add a button to the south to re-start the game via board.newGame()
-        // ......
+        miscPanel.setLayout(new FlowLayout());
+
+        // DONE Add a button to the south to re-start the game via board.newGame()
+        btnNewGame = new JButton("New Game");
+        btnNewGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                board.newGame(difficulty);
+            }
+        });
+
+        btnChangeDiff = new DifficultyPaneButton("Change difficulty",this);
+
+        difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
+
+        miscPanel.add(btnNewGame);
+        miscPanel.add(btnChangeDiff);
+        miscPanel.add(difficultyLabel);
+
+        cp.add(miscPanel, BorderLayout.SOUTH);
 
         // Initialize the game board to start the game
         board.newGame(difficulty);
@@ -40,4 +63,6 @@ public class SudokuMain extends JFrame {
             }
          });
     }
+
+    
 }

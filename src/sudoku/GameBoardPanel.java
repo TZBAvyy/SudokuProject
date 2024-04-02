@@ -2,6 +2,7 @@ package sudoku;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class GameBoardPanel extends JPanel {
     private static final long serialVersionUID = 1L;  // to prevent serial warning
@@ -22,11 +23,27 @@ public class GameBoardPanel extends JPanel {
     public GameBoardPanel() {
         super.setLayout(new GridLayout(SudokuConstants.GRID_SIZE, SudokuConstants.GRID_SIZE));  // JPanel
 
+        //Initialise border based on types (thickness:1 for default, thickness:3 for seperating squares)
+        Border left = BorderFactory.createMatteBorder(1, 3, 1, 1, Color.BLACK);
+        Border bottom = BorderFactory.createMatteBorder(1, 1, 3, 1, Color.BLACK);
+        Border bottomleft = BorderFactory.createMatteBorder(1, 3, 3, 1, Color.BLACK);
+        Border otherwise = BorderFactory.createLineBorder(Color.BLACK);
+
         // Allocate the 2D array of Cell, and added into JPanel.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 cells[row][col] = new Cell(row, col);
                 super.add(cells[row][col]);   // JPanel
+                //Sets the border for every cell based on position
+                if ((col)%3==0 && (row+1)%3==0) {
+                    cells[row][col].setBorder(bottomleft);
+                } else if ((row+1)%3==0) {
+                    cells[row][col].setBorder(bottom);
+                } else if ((col)%3==0) {
+                    cells[row][col].setBorder(left);
+                } else {
+                    cells[row][col].setBorder(otherwise);
+                }
             }
         }
 
