@@ -27,7 +27,7 @@ public class GameBoardPanel extends JPanel {
         Border left = BorderFactory.createMatteBorder(1, 3, 1, 1, Color.BLACK);
         Border bottom = BorderFactory.createMatteBorder(1, 1, 3, 1, Color.BLACK);
         Border bottomleft = BorderFactory.createMatteBorder(1, 3, 3, 1, Color.BLACK);
-        Border otherwise = BorderFactory.createLineBorder(Color.BLACK);
+        Border standard = BorderFactory.createMatteBorder(1, 1,1, 1, Color.BLACK);
 
         // Allocate the 2D array of Cell, and added into JPanel.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
@@ -42,7 +42,7 @@ public class GameBoardPanel extends JPanel {
                 } else if ((col)%3==0) {
                     cells[row][col].setBorder(left);
                 } else {
-                    cells[row][col].setBorder(otherwise);
+                    cells[row][col].setBorder(standard);
                 }
             }
         }
@@ -73,12 +73,15 @@ public class GameBoardPanel extends JPanel {
             //Easy difficulty gives 51 cells as clues
             puzzle.newPuzzle(30);
         } else if (difficulty==SudokuDifficulty.NORMAL) {
-            //Easy difficulty gives 41 cells as clues
+            //Normal difficulty gives 41 cells as clues
             puzzle.newPuzzle(40);
         } else if (difficulty==SudokuDifficulty.HARD) {
-            //Easy difficulty gives 31 cells as clues
+            //Hard difficulty gives 31 cells as clues
             puzzle.newPuzzle(50);
-        } 
+        } else if (difficulty==SudokuDifficulty.CHALLENGE) {
+            //Challenge difficulty gives 26 cells as clues
+            puzzle.newPuzzle(55);
+        }
         
         // Initialize all the 9x9 cells, based on the puzzle.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {

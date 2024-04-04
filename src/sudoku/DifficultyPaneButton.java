@@ -29,6 +29,8 @@ public class DifficultyPaneButton extends JButton{
             JPanel btnPanel = new JPanel();
             //JPanel to layout components
             JPanel mainPanel = new JPanel();
+            //JLabel to show difficulty change
+            JLabel mainText = new JLabel("Select new difficulty");
             //Saves the current difficulty of the Sudoku puzzle
             SudokuDifficulty currentDifficulty = mainProgram.difficulty;
 
@@ -36,7 +38,7 @@ public class DifficultyPaneButton extends JButton{
             mainPanel.setLayout(new BorderLayout());
 
             //Arrange frame to display
-            mainPanel.add(new JLabel("Select new difficulty"), BorderLayout.NORTH);
+            mainPanel.add(mainText, BorderLayout.NORTH);
 
             mainPanel.add(btnPanel, BorderLayout.CENTER);
 
@@ -57,6 +59,12 @@ public class DifficultyPaneButton extends JButton{
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         mainProgram.difficulty = btnDifficulty;
+                        if (currentDifficulty != btnDifficulty) {
+                            mainText.setText(String.format("%s --> %s", currentDifficulty.name(), btnDifficulty.name()));
+                        } else {
+                            mainText.setText("NO CHANGE");
+                        }
+                        
                     }
                 });
 
