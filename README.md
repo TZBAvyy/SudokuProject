@@ -20,10 +20,9 @@ Code Written by Avisena Gibraltar: {
     Added code to generate which squares to be given
     Created a "menu bar" for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes)
     Added status label at bottom of game to see remaining cells left
+    Accept any "valid" number at the time of input (no duplicate in row, column and sub-grid), but signal a conflict whenever it is detected. Highlight the conflicting cells. 
 
     Added solver using backtracking algorithm to ensure puzzle has only 1 unique solution [TODO]
-
-    Accept any "valid" number at the time of input (no duplicate in row, column and sub-grid), but signal a conflict whenever it is detected. Highlight the conflicting cells. [TODO]
 
 }
 

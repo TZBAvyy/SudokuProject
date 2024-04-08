@@ -135,9 +135,15 @@ public class GameBoardPanel extends JPanel {
     public boolean isSolved() {
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-                if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
+
+                /* if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
+                    return false;
+                } */
+
+                if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].conflict) {
                     return false;
                 }
+                
             }
         }
         return true;
@@ -159,19 +165,42 @@ public class GameBoardPanel extends JPanel {
             //Checks if user inputs an character or presses back space to delete
             if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE) {
                 sourceCell.status = CellStatus.TO_GUESS;
+                sourceCell.conflict = false;
                 sourceCell.paint();
-                updateStatus();
-            } else {
-                // Retrieve the int entered
-                int numberIn = Integer.parseInt(sourceCell.getText());
+
+                for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+                    if (cells[row][sourceCell.col].conflict) {
+                        updateConflict(cells[row][sourceCell.col]);
+                    }
+                }
+
+                for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+                    if (cells[sourceCell.row][col].conflict) {
+                        updateConflict(cells[sourceCell.row][col]);
+                    }
+                }
+
+                for (int row=3*(sourceCell.row/3) ; row < 3*(sourceCell.row/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
+                    for (int col=3*(sourceCell.col/3) ; col < 3*(sourceCell.col/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
+                        if (cells[row][col].conflict) {
+                            updateConflict(cells[row][col]);
+                        }
+                    }
+                }
                 
+                
+                updateStatus();
+            } else if (e.getKeyCode()>=KeyEvent.VK_1 && e.getKeyCode()<=KeyEvent.VK_9) {
+                sourceCell.status = CellStatus.GUESSED;
+                /* 
                 if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
                     sourceCell.status = CellStatus.CORRECT_GUESS;
                 } else {                            //Update the cell status sourceCell.status
                     sourceCell.status = CellStatus.WRONG_GUESS;
                 }
+                */
+                updateConflict(sourceCell);
                 updateStatus();
-                sourceCell.paint();   // re-paint this cell based on its status
                
                 /* DONE
                 * Check if the player has solved the puzzle after this move,
@@ -180,8 +209,85 @@ public class GameBoardPanel extends JPanel {
                 if (isSolved()) {
                     JOptionPane.showMessageDialog(null, "Congratulations, you won!");
                 }
+            } else { //IF USER TYPES INVALID INPUT
+                System.out.println("Invalid Input Detected");
             }
         }
+    }
+
+    //Checks and updates any conflict from the cell of specified row and col after input
+    public void updateConflict(Cell sourceCell) {
+        int sourceRow = sourceCell.row;
+        int sourceCol = sourceCell.col;
+        int sourceInput = Integer.parseInt(sourceCell.getText());
+        int cellNumber;
+        boolean conflictExists = false;
+
+        //Check for same number in row
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+            //If cell has yet to have any input, SKIP
+            if (!cells[row][sourceCol].getText().isEmpty()) {
+
+                //Checks the number on the cell with the sourceCell number
+                cellNumber = Integer.parseInt(cells[row][sourceCol].getText());
+
+                if (cellNumber == sourceInput && row!=sourceRow) { //Skips cell if it is sourceCell
+                    //Any cell that isnt sourceCell but has same number
+                    //set its conflict = true and paint()
+                    cells[row][sourceCol].conflict = true;
+                    cells[row][sourceCol].paint();
+                    conflictExists = true;
+                }
+            }
+        }
+
+        //Check for same number in col
+        for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+            //If cell has yet to have any input, SKIP
+            if (!cells[sourceRow][col].getText().isEmpty()) {
+
+                //Checks the number on the cell with the sourceCell number
+                cellNumber = Integer.parseInt(cells[sourceRow][col].getText());
+
+                if (cellNumber == sourceInput && col!=sourceCol) { //Skips cell if it is sourceCell
+                    //Any cell that isnt sourceCell but has same number
+                    //set its conflict = true and paint()
+                    cells[sourceRow][col].conflict = true;
+                    cells[sourceRow][col].paint();
+                    conflictExists = true;
+                }
+            }
+        }
+
+        //Check for same number in 3x3
+        // Where the first number is the row in range and the second number is the col in range
+        // (0-2,0-2) | (0-2,3-5) | (0-2,6-8)
+        // (3-5,0-2) | (3-5,3-5) | (3-5,6-8)
+        // (6-8,0-2) | (6-8,3-5) | (6-8,6-8)
+        // e.g. Middle 3x3 starts at row 3, col 3 and ends with row 5, col 5
+        for (int row=3*(sourceRow/3) ; row < 3*(sourceRow/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
+            for (int col=3*(sourceCol/3) ; col < 3*(sourceCol/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
+                //If cell has yet to have any input, SKIP
+                if (!cells[row][col].getText().isEmpty()) {
+
+                    //Checks the number on the cell with the sourceCell number
+                    cellNumber = Integer.parseInt(cells[row][col].getText());
+
+                    //Skips cell if it its row or col is same as sourceCell, since it has been check previously
+                    if (cellNumber == sourceInput && col!=sourceCol && row!=sourceRow) { 
+                        //Any cell that isnt sourceCell but has same number
+                        //set its conflict = true and paint()
+                        cells[row][col].conflict = true;
+                        cells[row][col].paint();
+                        conflictExists = true;
+                    }
+                }
+            }
+        }
+
+        //Update sourceCell last, if exists atleast 1 conflict => conflictExists = true, else false
+        cells[sourceRow][sourceCol].conflict = conflictExists;
+        cells[sourceRow][sourceCol].paint();
     }
 
     public void updateStatus() {

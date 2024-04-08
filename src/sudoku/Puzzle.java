@@ -86,8 +86,8 @@ public class Puzzle {
         int randomPos;
         int[] row;
 
-        for (int boxIndex=0 ; boxIndex < SudokuConstants.GRID_SIZE ; boxIndex += SudokuConstants.GRID_SIZE/3) {
-            for (int boxRow=0 ; boxRow < SudokuConstants.GRID_SIZE/3 ; boxRow++ ) {
+        for (int boxIndex=0 ; boxIndex < SudokuConstants.GRID_SIZE ; boxIndex += SudokuConstants.SUBGRID_SIZE) {
+            for (int boxRow=0 ; boxRow < SudokuConstants.SUBGRID_SIZE ; boxRow++ ) {
                 //Gets the row of the input sudoku puzzle
                 //boxIndex is the first index of each box in the puzzle
                 //boxRow is the row of each box

@@ -17,6 +17,7 @@ public class Cell extends JTextField {
     public static final Color BG_TO_GUESS  = Color.YELLOW;
     public static final Color BG_CORRECT_GUESS = new Color(0, 216, 0);
     public static final Color BG_WRONG_GUESS   = new Color(216, 0, 0);
+    public static final Color FG_GIVEN_CONFLICT = new Color(216, 0, 0);
     public static final Font FONT_NUMBERS = new Font("OCR A Extended", Font.PLAIN, 28);
 
     // Define properties (package-visible)
@@ -26,6 +27,8 @@ public class Cell extends JTextField {
     int number;
     /** The status of this cell defined in enum CellStatus */
     CellStatus status;
+    //Conflict Status
+    boolean conflict = false;
 
     /** Constructor */
     public Cell(int row, int col) {
@@ -51,17 +54,27 @@ public class Cell extends JTextField {
             super.setText(number + "");
             super.setEditable(false);
             super.setBackground(BG_GIVEN);
-            super.setForeground(FG_GIVEN);
+            if (conflict && status == CellStatus.GIVEN) {
+                super.setForeground(FG_GIVEN_CONFLICT);
+            } else {
+                super.setForeground(FG_GIVEN);
+            }
         } else if (status == CellStatus.TO_GUESS) {
             // Inherited from JTextField: Set display properties
             super.setText("");
             super.setEditable(true);
             super.setBackground(BG_TO_GUESS);
             super.setForeground(FG_NOT_GIVEN);
-        } else if (status == CellStatus.CORRECT_GUESS) {  // from TO_GUESS
+        } /* else if (status == CellStatus.CORRECT_GUESS) {  // from TO_GUESS
             super.setBackground(BG_CORRECT_GUESS);
         } else if (status == CellStatus.WRONG_GUESS) {    // from TO_GUESS
             super.setBackground(BG_WRONG_GUESS);
+        } */ else if (status == CellStatus.GUESSED) {
+            if (conflict) {
+                super.setBackground(BG_WRONG_GUESS);
+            } else {
+                super.setBackground(BG_CORRECT_GUESS);
+            }
         }
     }
 }
