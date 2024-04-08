@@ -19,10 +19,16 @@ public class GameBoardPanel extends JPanel {
     /** It also contains a Puzzle with array numbers and isGiven */
     private Puzzle puzzle = new Puzzle();
 
+    //For referencing SudokuMain instance
+    SudokuMain mainProgram;
+
     /** Constructor */
-    public GameBoardPanel() {
+    public GameBoardPanel(SudokuMain mainProgram) {
         super.setLayout(new GridLayout(SudokuConstants.GRID_SIZE, SudokuConstants.GRID_SIZE));  // JPanel
 
+        //Saves current game instance
+        this.mainProgram = mainProgram;
+        
         //Initialise border based on types (thickness:1 for default, thickness:3 for seperating squares)
         Border left = BorderFactory.createMatteBorder(1, 3, 1, 1, Color.BLACK);
         Border bottom = BorderFactory.createMatteBorder(1, 1, 3, 1, Color.BLACK);
@@ -68,20 +74,23 @@ public class GameBoardPanel extends JPanel {
         * You can call this method to start a new game.
         */
     public void newGame(SudokuDifficulty difficulty) {
+        int cellsToGuess = 0;
         // Generate a new puzzle based on difficulty
         if (difficulty==SudokuDifficulty.EASY) {
             //Easy difficulty gives 51 cells as clues
-            puzzle.newPuzzle(30);
+            cellsToGuess = 30;
         } else if (difficulty==SudokuDifficulty.NORMAL) {
             //Normal difficulty gives 41 cells as clues
-            puzzle.newPuzzle(40);
+            cellsToGuess = 40;
         } else if (difficulty==SudokuDifficulty.HARD) {
             //Hard difficulty gives 31 cells as clues
-            puzzle.newPuzzle(50);
+            cellsToGuess = 50;
         } else if (difficulty==SudokuDifficulty.CHALLENGE) {
             //Challenge difficulty gives 26 cells as clues
-            puzzle.newPuzzle(55);
+            cellsToGuess = 55;
         }
+        puzzle.newPuzzle(cellsToGuess);
+        mainProgram.statusLabel.setText("Cells remaining: " + cellsToGuess);
         
         // Initialize all the 9x9 cells, based on the puzzle.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
@@ -92,6 +101,9 @@ public class GameBoardPanel extends JPanel {
     }
 
     public void resetGame() {
+        SudokuDifficulty difficulty = mainProgram.difficulty;
+        int cellsToGuess = 0;
+
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 if (!puzzle.isGiven[row][col]) {
@@ -100,6 +112,20 @@ public class GameBoardPanel extends JPanel {
                 }
             }
         }
+        if (difficulty==SudokuDifficulty.EASY) {
+            //Easy difficulty gives 51 cells as clues
+            cellsToGuess = 30;
+        } else if (difficulty==SudokuDifficulty.NORMAL) {
+            //Normal difficulty gives 41 cells as clues
+            cellsToGuess = 40;
+        } else if (difficulty==SudokuDifficulty.HARD) {
+            //Hard difficulty gives 31 cells as clues
+            cellsToGuess = 50;
+        } else if (difficulty==SudokuDifficulty.CHALLENGE) {
+            //Challenge difficulty gives 26 cells as clues
+            cellsToGuess = 55;
+        }
+        mainProgram.statusLabel.setText("Cells remaining: " + cellsToGuess);
     }
 
     /**
@@ -134,20 +160,19 @@ public class GameBoardPanel extends JPanel {
             if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE) {
                 sourceCell.status = CellStatus.TO_GUESS;
                 sourceCell.paint();
+                updateStatus();
             } else {
                 // Retrieve the int entered
                 int numberIn = Integer.parseInt(sourceCell.getText());
-                // For debugging
-                System.out.println("You entered " + numberIn + " at (" + (sourceCell.row+1) + "," + (sourceCell.col+1) + ")");
-        
-                // DONE
+                
                 if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
                     sourceCell.status = CellStatus.CORRECT_GUESS;
                 } else {                            //Update the cell status sourceCell.status
                     sourceCell.status = CellStatus.WRONG_GUESS;
                 }
+                updateStatus();
                 sourceCell.paint();   // re-paint this cell based on its status
-    
+               
                 /* DONE
                 * Check if the player has solved the puzzle after this move,
                 *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
@@ -158,4 +183,17 @@ public class GameBoardPanel extends JPanel {
             }
         }
     }
+
+    public void updateStatus() {
+        int cellsLeft = 0;
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+                if (cells[row][col].status==CellStatus.TO_GUESS) {
+                    cellsLeft += 1;
+                }
+            }
+        }
+        mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
+    }
+
 }

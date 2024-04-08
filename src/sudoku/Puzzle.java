@@ -58,18 +58,25 @@ public class Puzzle {
         int[][] result = shuffleRows(sudoku);
 
         //Flips the puzzle rows to be its cols and its cols to be rows
-        int[][] flippedResult = new int[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
-
-        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; row++) {
-            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; col++) {
-                flippedResult[row][col] = result[col][row];
-            }
-        }
+        int[][] flippedResult = flip(result);
 
         //Shuffles the new rows (originally cols)
         result = shuffleRows(flippedResult);
 
         return result;
+    }
+
+    //Sudoku Puzzle Flipper (Flips rows to cols)
+    public int[][] flip(int[][] sudoku) {
+        int[][] flippedResult = new int[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
+
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; row++) {
+            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; col++) {
+                flippedResult[row][col] = sudoku[col][row];
+            }
+        }
+        
+        return flippedResult;
     }
 
     //Sudoku row shuffler 
