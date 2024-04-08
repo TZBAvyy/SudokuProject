@@ -32,7 +32,7 @@ public class SudokuMain extends JFrame {
         difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
         miscPanel.add(difficultyLabel);
 
-        /* [FEATURE CHANGED INTO MENU BAR]
+        /* [FEATURES CHANGED INTO MENU BAR]
         // DONE Add a button to the south to re-start the game via board.newGame()
         btnNewGame = new JButton("New Game");
         btnNewGame.addActionListener(new ActionListener() {
@@ -41,8 +41,9 @@ public class SudokuMain extends JFrame {
                 board.newGame(difficulty);
             }
         });
-
+        // Adds a button to the zouth to change difficulty
         btnChangeDiff = new JButton("Change difficulty");
+        // Uses custom DifficultySelectListener object to create custom JOptionPane to change difficulty
         btnChangeDiff.addActionListener(new DifficultySelectListener(this));
         miscPanel.add(btnNewGame);
         miscPanel.add(btnChangeDiff);
@@ -51,7 +52,7 @@ public class SudokuMain extends JFrame {
         //Adds miscPanel into bottom (SOUTH) of the container
         cp.add(miscPanel, BorderLayout.SOUTH);
 
-        //Initialise menu object from SudokuMenu
+        //Initialise JMenuBar menu object from SudokuMenu and sets the program's menu bar to it
         menu = new SudokuMenu(this);
         this.setJMenuBar(menu);
 

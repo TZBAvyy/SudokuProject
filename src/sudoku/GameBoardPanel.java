@@ -55,7 +55,7 @@ public class GameBoardPanel extends JPanel {
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 if (cells[row][col].isEditable()) {
-                    cells[row][col].addActionListener(listener);   // For all editable rows and cols
+                    cells[row][col].addKeyListener(listener);   // For all editable rows and cols
                 }
             }
         }
@@ -118,31 +118,43 @@ public class GameBoardPanel extends JPanel {
     }
 
     // DONE Define a Listener Inner Class for all the editable Cells
-    private class CellInputListener implements ActionListener {
+    private class CellInputListener implements KeyListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void keyTyped(KeyEvent e) {   
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {    
+        }
+        @Override
+        public void keyReleased(KeyEvent e) {
             // Get a reference of the JTextField that triggers this action event
             Cell sourceCell = (Cell)e.getSource();
-            
-            // Retrieve the int entered
-            int numberIn = Integer.parseInt(sourceCell.getText());
-            // For debugging
-            System.out.println("You entered " + numberIn + " at (" + (sourceCell.row+1) + "," + (sourceCell.col+1) + ")");
+
+            //Checks if user inputs an character or presses back space to delete
+            if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE) {
+                sourceCell.status = CellStatus.TO_GUESS;
+                sourceCell.paint();
+            } else {
+                // Retrieve the int entered
+                int numberIn = Integer.parseInt(sourceCell.getText());
+                // For debugging
+                System.out.println("You entered " + numberIn + " at (" + (sourceCell.row+1) + "," + (sourceCell.col+1) + ")");
+        
+                // DONE
+                if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
+                    sourceCell.status = CellStatus.CORRECT_GUESS;
+                } else {                            //Update the cell status sourceCell.status
+                    sourceCell.status = CellStatus.WRONG_GUESS;
+                }
+                sourceCell.paint();   // re-paint this cell based on its status
     
-            // DONE
-            if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
-                sourceCell.status = CellStatus.CORRECT_GUESS;
-            } else {                            //Update the cell status sourceCell.status
-                sourceCell.status = CellStatus.WRONG_GUESS;
-            }
-            sourceCell.paint();   // re-paint this cell based on its status
-  
-            /* DONE
-            * Check if the player has solved the puzzle after this move,
-            *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
-            */
-            if (isSolved()) {
-                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                /* DONE
+                * Check if the player has solved the puzzle after this move,
+                *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
+                */
+                if (isSolved()) {
+                    JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                }
             }
         }
     }
