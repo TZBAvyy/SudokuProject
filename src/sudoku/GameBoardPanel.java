@@ -91,6 +91,17 @@ public class GameBoardPanel extends JPanel {
         }
     }
 
+    public void resetGame() {
+        for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+            for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                if (!puzzle.isGiven[row][col]) {
+                    cells[row][col].status = CellStatus.TO_GUESS;
+                    cells[row][col].paint();
+                }
+            }
+        }
+    }
+
     /**
         * Return true if the puzzle is solved
         * i.e., none of the cell have status of TO_GUESS or WRONG_GUESS

@@ -2,16 +2,18 @@ package sudoku;
 
 import javax.swing.*;
 import java.awt.event.*;
-import sudoku.DifficultyPaneButton.DifficultySelectListener;
 
 public class SudokuMenu extends JMenuBar{
     JMenu fileMenu, optionMenu, helpMenu;
-    JMenuItem newGameItem, resetGameItem, exitItem;
+    JMenuItem newGameItem, resetGameItem, exitItem, difficultyItem;
 
     public SudokuMenu(SudokuMain mainProgram) {
         super();
 
-        //Initialise Menu Items
+        //Init fileMenu object and add MenuItems objects into File Menu oject
+        fileMenu = new JMenu("File");
+
+        //Initialise Menu Items for fileMenu
         newGameItem = new JMenuItem("New Game");
         newGameItem.addActionListener(new ActionListener() {
             @Override
@@ -24,7 +26,7 @@ public class SudokuMenu extends JMenuBar{
         resetGameItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                mainProgram.board.resetGame();
             };
         });
 
@@ -36,20 +38,21 @@ public class SudokuMenu extends JMenuBar{
             };
         });
 
-        //Init fileManu object and add MenuItems objects into File Menu oject
-        fileMenu = new JMenu("File");
+        //Add MenuItems into fileMenu
         fileMenu.add(newGameItem);
         fileMenu.add(resetGameItem);
         fileMenu.add(exitItem);
 
         //Init optionMenu object
         optionMenu = new JMenu("Options");
-        optionMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });
+
+        //Initialise Menu objects for optionMenu
+        difficultyItem = new JMenuItem("Change Difficulty");
+        //Uses the custom DifficultySelectListener to create a JOptionPane menu to change settings
+        difficultyItem.addActionListener(new DifficultySelectListener(mainProgram));
+
+        //Add MenuItems into optionMenu
+        optionMenu.add(difficultyItem);
 
         //Init helpMenu object
         helpMenu = new JMenu("Help");

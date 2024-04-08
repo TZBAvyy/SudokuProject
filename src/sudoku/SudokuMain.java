@@ -12,10 +12,10 @@ public class SudokuMain extends JFrame {
     // private variables
     GameBoardPanel board = new GameBoardPanel();
     JButton btnNewGame, btnChangeDiff;
-    JPanel miscPanel = new JPanel();
+    JPanel miscPanel;
     JLabel difficultyLabel;
     SudokuDifficulty difficulty = SudokuDifficulty.NORMAL; //Standard difficulty == NORMAL
-    SudokuMenu menu;
+    JMenuBar menu;
 
     // Constructor
     public SudokuMain() {
@@ -24,10 +24,16 @@ public class SudokuMain extends JFrame {
 
         cp.add(board, BorderLayout.CENTER);
 
+        //Initialise the miscPanel object
+        miscPanel = new JPanel();
         miscPanel.setLayout(new FlowLayout());
 
+        //Initialise Difficulty Label and add it into miscPanel
+        difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
+        miscPanel.add(difficultyLabel);
+
+        /* [FEATURE CHANGED INTO MENU BAR]
         // DONE Add a button to the south to re-start the game via board.newGame()
-        /* 
         btnNewGame = new JButton("New Game");
         btnNewGame.addActionListener(new ActionListener() {
             @Override
@@ -35,21 +41,19 @@ public class SudokuMain extends JFrame {
                 board.newGame(difficulty);
             }
         });
+
+        btnChangeDiff = new JButton("Change difficulty");
+        btnChangeDiff.addActionListener(new DifficultySelectListener(this));
+        miscPanel.add(btnNewGame);
+        miscPanel.add(btnChangeDiff);
         */
+
+        //Adds miscPanel into bottom (SOUTH) of the container
+        cp.add(miscPanel, BorderLayout.SOUTH);
 
         //Initialise menu object from SudokuMenu
         menu = new SudokuMenu(this);
         this.setJMenuBar(menu);
-
-        //Initialise the miscPanel object
-        btnChangeDiff = new JButton("Change difficulty");
-        btnChangeDiff.addActionListener(new DifficultySelectListener(this));
-        difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
-        //miscPanel.add(btnNewGame);
-        miscPanel.add(btnChangeDiff);
-        miscPanel.add(difficultyLabel);
-
-        cp.add(miscPanel, BorderLayout.SOUTH);
 
         // Initialize the game board to start the game
         board.newGame(difficulty);
