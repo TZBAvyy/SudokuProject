@@ -15,6 +15,7 @@ public class SudokuMain extends JFrame {
     JPanel miscPanel = new JPanel();
     JLabel difficultyLabel;
     SudokuDifficulty difficulty = SudokuDifficulty.NORMAL; //Standard difficulty == NORMAL
+    SudokuMenu menu;
 
     // Constructor
     public SudokuMain() {
@@ -26,6 +27,7 @@ public class SudokuMain extends JFrame {
         miscPanel.setLayout(new FlowLayout());
 
         // DONE Add a button to the south to re-start the game via board.newGame()
+        /* 
         btnNewGame = new JButton("New Game");
         btnNewGame.addActionListener(new ActionListener() {
             @Override
@@ -33,12 +35,16 @@ public class SudokuMain extends JFrame {
                 board.newGame(difficulty);
             }
         });
+        */
 
+        //Initialise menu object from SudokuMenu
+        menu = new SudokuMenu(this);
+        this.setJMenuBar(menu);
+
+        //Initialise the miscPanel object
         btnChangeDiff = new DifficultyPaneButton("Change difficulty",this);
-
         difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
-
-        miscPanel.add(btnNewGame);
+        //miscPanel.add(btnNewGame);
         miscPanel.add(btnChangeDiff);
         miscPanel.add(difficultyLabel);
 
