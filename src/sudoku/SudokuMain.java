@@ -42,7 +42,8 @@ public class SudokuMain extends JFrame {
         this.setJMenuBar(menu);
 
         //Initialise the miscPanel object
-        btnChangeDiff = new DifficultyPaneButton("Change difficulty",this);
+        btnChangeDiff = new JButton("Change difficulty");
+        btnChangeDiff.addActionListener(new DifficultySelectListener(this));
         difficultyLabel = new JLabel("Current Difficulty: " + difficulty.name());
         //miscPanel.add(btnNewGame);
         miscPanel.add(btnChangeDiff);

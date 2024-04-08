@@ -1,7 +1,8 @@
 package sudoku;
 
 import javax.swing.*;
-import java.awt.event.*;;
+import java.awt.event.*;
+import sudoku.DifficultyPaneButton.DifficultySelectListener;
 
 public class SudokuMenu extends JMenuBar{
     JMenu fileMenu, optionMenu, helpMenu;
@@ -41,8 +42,23 @@ public class SudokuMenu extends JMenuBar{
         fileMenu.add(resetGameItem);
         fileMenu.add(exitItem);
 
+        //Init optionMenu object
         optionMenu = new JMenu("Options");
+        optionMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
+
+        //Init helpMenu object
         helpMenu = new JMenu("Help");
+        helpMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        });
 
         //Add all Menu objects into MenuBar objecgt
         this.add(fileMenu);

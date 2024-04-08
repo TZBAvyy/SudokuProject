@@ -11,10 +11,10 @@ Code Written by Avisena Gibraltar: {
     Allocated a common listener as the ActionEvent listener for all the Cells (JTextFields)
     Added this common listener to all editable cells
     Added borders to all cells to better distinguish sudoku squares
-    Added button to the south to re-start the game via board.newGame()
+    Added button to the south to re-start the game via board.newGame() [CHANGED TO MENU BAR BUTTON IN FILE TAB]
     Added difficulty through SudokuDifficulty enum
-    Added button to the south to change difficulty of game via DifficultyPaneButton class
-    DifficultyPaneButton class implements a JOptionPane to change difficulty
+    Added button to the south to change difficulty of game
+    Implemented DifficultySelectListener to create JOptionPane to change difficulty
     Added label to show current difficulty level
     Remove hardcoded puzzle, generate puzzles from scratch
     Added code to generate which squares to be given
@@ -24,7 +24,7 @@ Code Written by Avisena Gibraltar: {
     Accept any "valid" number at the time of input (no duplicate in row, column and sub-grid), but signal a conflict whenever it is detected. Highlight the conflicting cells. [TODO]
 
     Create a "menu bar" for options such as "File" ("New Game", "Reset Game", "Exit"), "Options", and "Help" (Use JMenuBar, JMenu, and JMenuItem classes).
-    
+
     Create a "status bar" (JTextField at the south zone of BorderLayout) to show the messages (e.g., number of cells remaining) (google "java swing statusbar") [TODO]
     
 
