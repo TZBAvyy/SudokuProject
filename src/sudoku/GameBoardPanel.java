@@ -18,6 +18,8 @@ public class GameBoardPanel extends JPanel {
     private Cell[][] cells = new Cell[SudokuConstants.GRID_SIZE][SudokuConstants.GRID_SIZE];
     /** It also contains a Puzzle with array numbers and isGiven */
     private Puzzle puzzle = new Puzzle();
+    // Listener class
+    CellInputListener listener = new CellInputListener();
 
     //For referencing SudokuMain instance
     SudokuMain mainProgram;
@@ -52,20 +54,6 @@ public class GameBoardPanel extends JPanel {
                 }
             }
         }
-
-        // DONE Allocate a common listener as the ActionEvent listener for all the
-        //  Cells (JTextFields)
-        CellInputListener listener = new CellInputListener();
-
-        // DONE Adds this common listener to all editable cells
-        for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
-            for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-                if (cells[row][col].isEditable()) {
-                    cells[row][col].addKeyListener(listener);   // For all editable rows and cols
-                }
-            }
-        }
-
         super.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
     }
 
@@ -95,9 +83,16 @@ public class GameBoardPanel extends JPanel {
         // Initialize all the 9x9 cells, based on the puzzle.
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                cells[row][col].removeKeyListener(listener);
                 cells[row][col].newGame(puzzle.numbers[row][col], puzzle.isGiven[row][col]);
+                if (cells[row][col].isEditable()) {
+                    cells[row][col].addKeyListener(listener);   // For all editable rows and cols
+                }
             }
         }
+
+        // DONE Allocate a common listener as the ActionEvent listener for all the
+        //  Cells (JTextFields)
     }
 
     public void resetGame() {
@@ -194,6 +189,7 @@ public class GameBoardPanel extends JPanel {
                 }
                 updateStatus();
 
+            //[TODO] CHECK FOR INPUT LENGTH > 1 AND DENY IT
             //IF USER ENTERS 1-9
             } else if (e.getKeyCode()>=KeyEvent.VK_1 && e.getKeyCode()<=KeyEvent.VK_9) {
                 /* [CHANGED TO NEW DYNAMIC GUESSING]
@@ -215,6 +211,7 @@ public class GameBoardPanel extends JPanel {
                     for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
                         for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                             cells[row][col].setEditable(false);
+                            cells[row][col].removeKeyListener(listener);
                         }
                     }
                 }
