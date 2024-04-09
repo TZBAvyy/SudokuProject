@@ -136,6 +136,7 @@ public class GameBoardPanel extends JPanel {
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
 
+                //[CHANGED FROM THIS TO ACCOMODATE DYNAMICALLY UPDATING VALIDITY]
                 /* if (cells[row][col].status == CellStatus.TO_GUESS || cells[row][col].status == CellStatus.WRONG_GUESS) {
                     return false;
                 } */
@@ -164,22 +165,26 @@ public class GameBoardPanel extends JPanel {
 
             //Checks if user inputs an character or presses back space to delete
             if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE) {
+                //IF BACKSPACE
+                //Remove everything in cell by setting status to TO_GUESS & conflict to false
                 sourceCell.status = CellStatus.TO_GUESS;
                 sourceCell.conflict = false;
                 sourceCell.paint();
 
+                //Check row, col and 3x3 for cells with conflict == true
+                //Then updateConflict() those cells
+                //IF only conflict was previously erased cell => it will remove conflict
+                //IF conflict still exists after cell was erased => keep conflict
                 for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
                     if (cells[row][sourceCell.col].conflict) {
                         updateConflict(cells[row][sourceCell.col]);
                     }
                 }
-
                 for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
                     if (cells[sourceCell.row][col].conflict) {
                         updateConflict(cells[sourceCell.row][col]);
                     }
-                }
-
+                } //Same algorithm concept as in updateConflict()
                 for (int row=3*(sourceCell.row/3) ; row < 3*(sourceCell.row/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
                     for (int col=3*(sourceCell.col/3) ; col < 3*(sourceCell.col/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
                         if (cells[row][col].conflict) {
@@ -187,29 +192,33 @@ public class GameBoardPanel extends JPanel {
                         }
                     }
                 }
-                
-                
                 updateStatus();
+
+            //IF USER ENTERS 1-9
             } else if (e.getKeyCode()>=KeyEvent.VK_1 && e.getKeyCode()<=KeyEvent.VK_9) {
-                sourceCell.status = CellStatus.GUESSED;
-                /* 
+                /* [CHANGED TO NEW DYNAMIC GUESSING]
                 if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
                     sourceCell.status = CellStatus.CORRECT_GUESS;
                 } else {                            //Update the cell status sourceCell.status
                     sourceCell.status = CellStatus.WRONG_GUESS;
                 }
                 */
+                
+                sourceCell.status = CellStatus.GUESSED;
                 updateConflict(sourceCell);
                 updateStatus();
                
-                /* DONE
-                * Check if the player has solved the puzzle after this move,
-                *   by calling isSolved(). Put up a congratulation JOptionPane, if so.
-                */
+                //Checks if user has solved puzzle after move, if so => Congratulation JOptionPane
                 if (isSolved()) {
                     JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                    //Disables input after winning
+                    for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+                        for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                            cells[row][col].setEditable(false);
+                        }
+                    }
                 }
-            } else { //IF USER TYPES INVALID INPUT
+            } else { //[TODO] IF USER TYPES INVALID INPUT, MAKE PREVENTIONS
                 System.out.println("Invalid Input Detected");
             }
         }

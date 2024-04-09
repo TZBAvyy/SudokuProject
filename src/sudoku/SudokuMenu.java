@@ -56,12 +56,7 @@ public class SudokuMenu extends JMenuBar{
 
         //Init helpMenu object
         helpMenu = new JMenu("Help");
-        helpMenu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });
+        
 
         //Add all Menu objects into MenuBar objecgt
         this.add(fileMenu);
