@@ -189,7 +189,11 @@ public class GameBoardPanel extends JPanel {
                 }
                 updateStatus();
 
-            //[TODO] CHECK FOR INPUT LENGTH > 1 AND DENY IT
+            //Checks for any input that increases length of text to >1
+            } else if (sourceCell.getText().length()>1) {
+                //Sets the sourceCell's text to a substring of its text minus last character
+                sourceCell.setText(sourceCell.getText().substring(0,sourceCell.getText().length()-1));
+
             //IF USER ENTERS 1-9
             } else if (e.getKeyCode()>=KeyEvent.VK_1 && e.getKeyCode()<=KeyEvent.VK_9) {
                 /* [CHANGED TO NEW DYNAMIC GUESSING]
@@ -215,7 +219,7 @@ public class GameBoardPanel extends JPanel {
                         }
                     }
                 }
-            } else { //[TODO] IF USER TYPES INVALID INPUT, MAKE PREVENTIONS
+            } else { //[TODO]
                 System.out.println("Invalid Input Detected");
             }
         }

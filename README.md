@@ -24,6 +24,8 @@ Code Written by Avisena Gibraltar: {
 
     Added solver using backtracking algorithm to ensure puzzle has only 1 unique solution [TODO]
 
+    Added Hint system to help player incase they get stuck [TODO]
+
 }
 
 ## Total Lines Written

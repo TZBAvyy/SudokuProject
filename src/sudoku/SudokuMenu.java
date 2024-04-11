@@ -56,6 +56,7 @@ public class SudokuMenu extends JMenuBar{
 
         //Init helpMenu object
         helpMenu = new JMenu("Help");
+        //[TODO] CREATE HINT SYSTEM HERE UNDER HELP MENU
         
 
         //Add all Menu objects into MenuBar objecgt
