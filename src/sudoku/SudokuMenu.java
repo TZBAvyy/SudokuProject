@@ -42,6 +42,7 @@ public class SudokuMenu extends JMenuBar{
         fileMenu.add(newGameItem);
         fileMenu.add(resetGameItem);
         fileMenu.add(exitItem);
+        
 
         //Init optionMenu object
         optionMenu = new JMenu("Options");
@@ -54,10 +55,10 @@ public class SudokuMenu extends JMenuBar{
         //Add MenuItems into optionMenu
         optionMenu.add(difficultyItem);
 
+
         //Init helpMenu object
         helpMenu = new JMenu("Help");
 
-        //[TODO] CREATE HINT SYSTEM HERE UNDER HELP MENU
         //Initialise hintItem object
         hintItem = new JMenuItem("Hint");
 

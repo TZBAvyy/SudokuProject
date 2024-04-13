@@ -219,8 +219,12 @@ public class GameBoardPanel extends JPanel {
                         }
                     }
                 }
-            } else { //[TODO]
-                System.out.println("Invalid Input Detected");
+            } else { //If invalid input
+                if (sourceCell.status==CellStatus.TO_GUESS) {
+                    //To ensure only resets cell if invalid input is in empty cell
+                    sourceCell.setText("");
+                }
+                //Case when invalid + cell.getText().length > 1 already covered
             }
         }
     }
