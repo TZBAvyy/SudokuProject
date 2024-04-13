@@ -10,25 +10,31 @@ public class SudokuMain extends JFrame {
 
     // private variables
     GameBoardPanel board = new GameBoardPanel(this);
+    MainMenuPanel mainMenuCard = new MainMenuPanel(this);
     JMenuBar menu = new SudokuMenu(this);
     SudokuDifficulty difficulty = SudokuDifficulty.NORMAL; //Standard difficulty == NORMAL
     //JButton btnNewGame, btnChangeDiff;
-    JPanel miscPanel;
+    JPanel miscPanel, sudokuCard;
     JLabel difficultyLabel = new JLabel(), statusLabel = new JLabel();
+    CardLayout cardLayout = new CardLayout();
     
 
     // Constructor
     public SudokuMain() {
         Container cp = getContentPane();
-        cp.setLayout(new BorderLayout());
+        cp.setLayout(cardLayout);
+
+        sudokuCard = new JPanel(new BorderLayout());
 
         //Sets the program's menu bar
         setJMenuBar(menu);
+        menu.setVisible(false);
 
-        cp.add(board, BorderLayout.CENTER);
+        sudokuCard.add(board, BorderLayout.CENTER);
 
         //Initialize the game board to start the game
-        board.newGame(difficulty);
+        //[MOVED TO MainMenuPanel newGameBtn]
+        //board.newGame(difficulty);
 
         //Initialise the miscPanel object
         miscPanel = new JPanel();
@@ -61,8 +67,12 @@ public class SudokuMain extends JFrame {
         */
 
         //Adds miscPanel into bottom (SOUTH) of the container
-        cp.add(miscPanel, BorderLayout.SOUTH);
+        sudokuCard.add(miscPanel, BorderLayout.SOUTH);
 
+        cp.add(sudokuCard, "Game");
+        cp.add(mainMenuCard, "Menu");
+
+        cardLayout.show(cp,"Menu");
         pack();     // Pack the UI components, instead of using setSize()
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // to handle window-closing
         setTitle("Sudoku");

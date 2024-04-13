@@ -84,6 +84,8 @@ public class GameBoardPanel extends JPanel {
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
                 cells[row][col].removeKeyListener(listener);
+                cells[row][col].conflict = false;
+                cells[row][col].hinted = false;
                 cells[row][col].newGame(puzzle.numbers[row][col], puzzle.isGiven[row][col]);
                 if (cells[row][col].isEditable()) {
                     cells[row][col].addKeyListener(listener);   // For all editable rows and cols
@@ -101,10 +103,12 @@ public class GameBoardPanel extends JPanel {
 
         for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
             for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                cells[row][col].conflict = false;
+                cells[row][col].hinted = false;
                 if (!puzzle.isGiven[row][col]) {
                     cells[row][col].status = CellStatus.TO_GUESS;
-                    cells[row][col].paint();
                 }
+                cells[row][col].paint();
             }
         }
         if (difficulty==SudokuDifficulty.EASY) {

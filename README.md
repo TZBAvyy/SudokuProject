@@ -22,6 +22,7 @@ Code Written by Avisena Gibraltar: {
     Added status label at bottom of game to see remaining cells left
     Accept any "valid" number at the time of input (no duplicate in row, column and sub-grid), but signal a conflict whenever it is detected. Highlight the conflicting cells. 
     Added Hint system into Help Menu to help player incase they get stuck
+    Added Main Menu Screen on start, with option to go back to main menu in Options Tab
 
 }
 

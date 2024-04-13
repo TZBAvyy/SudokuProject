@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class SudokuMenu extends JMenuBar{
     JMenu fileMenu, optionMenu, helpMenu;
-    JMenuItem newGameItem, resetGameItem, exitItem, difficultyItem, hintItem;
+    JMenuItem newGameItem, resetGameItem, exitItem, difficultyItem, hintItem, mainMenuItem;
 
     public SudokuMenu(SudokuMain mainProgram) {
         super();
@@ -52,9 +52,19 @@ public class SudokuMenu extends JMenuBar{
         //Uses the custom DifficultySelectListener to create a JOptionPane menu to change settings
         difficultyItem.addActionListener(new DifficultySelectListener(mainProgram));
 
-        //Add MenuItems into optionMenu
-        optionMenu.add(difficultyItem);
+        mainMenuItem = new JMenuItem("Back to Main Menu");
+        mainMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainProgram.cardLayout.show(mainProgram.getContentPane(),"Menu");
+                mainProgram.menu.setVisible(false);
+            }
+        });
 
+        //Add MenuItems into optionMenu
+        optionMenu.add(mainMenuItem);
+        optionMenu.add(difficultyItem);
+        
 
         //Init helpMenu object
         helpMenu = new JMenu("Help");
