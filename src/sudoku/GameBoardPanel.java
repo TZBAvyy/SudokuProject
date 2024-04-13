@@ -145,7 +145,135 @@ public class GameBoardPanel extends JPanel {
         return true;
     }
 
-    // DONE Define a Listener Inner Class for all the editable Cells
+    //Checks and updates any conflict from the cell of specified row and col after input
+    public void updateConflict(Cell sourceCell) {
+        int sourceRow = sourceCell.row;
+        int sourceCol = sourceCell.col;
+        int sourceInput = Integer.parseInt(sourceCell.getText());
+        int cellNumber;
+        boolean conflictExists = false;
+
+        //Check for same number in row
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+            //If cell has yet to have any input, SKIP
+            if (!cells[row][sourceCol].getText().isEmpty()) {
+
+                //Checks the number on the cell with the sourceCell number
+                cellNumber = Integer.parseInt(cells[row][sourceCol].getText());
+
+                if (cellNumber == sourceInput && row!=sourceRow) { //Skips cell if it is sourceCell
+                    //Any cell that isnt sourceCell but has same number
+                    //set its conflict = true and paint()
+                    cells[row][sourceCol].conflict = true;
+                    cells[row][sourceCol].paint();
+                    conflictExists = true;
+                }
+            }
+        }
+
+        //Check for same number in col
+        for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+            //If cell has yet to have any input, SKIP
+            if (!cells[sourceRow][col].getText().isEmpty()) {
+
+                //Checks the number on the cell with the sourceCell number
+                cellNumber = Integer.parseInt(cells[sourceRow][col].getText());
+
+                if (cellNumber == sourceInput && col!=sourceCol) { //Skips cell if it is sourceCell
+                    //Any cell that isnt sourceCell but has same number
+                    //set its conflict = true and paint()
+                    cells[sourceRow][col].conflict = true;
+                    cells[sourceRow][col].paint();
+                    conflictExists = true;
+                }
+            }
+        }
+
+        //Check for same number in 3x3
+        // Where the first number is the row in range and the second number is the col in range
+        // (0-2,0-2) | (0-2,3-5) | (0-2,6-8)
+        // (3-5,0-2) | (3-5,3-5) | (3-5,6-8)
+        // (6-8,0-2) | (6-8,3-5) | (6-8,6-8)
+        // e.g. Middle 3x3 starts at row 3, col 3 and ends with row 5, col 5
+        for (int row=3*(sourceRow/3) ; row < 3*(sourceRow/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
+            for (int col=3*(sourceCol/3) ; col < 3*(sourceCol/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
+                //If cell has yet to have any input, SKIP
+                if (!cells[row][col].getText().isEmpty()) {
+
+                    //Checks the number on the cell with the sourceCell number
+                    cellNumber = Integer.parseInt(cells[row][col].getText());
+
+                    //Skips cell if it its row or col is same as sourceCell, since it has been check previously
+                    if (cellNumber == sourceInput && col!=sourceCol && row!=sourceRow) { 
+                        //Any cell that isnt sourceCell but has same number
+                        //set its conflict = true and paint()
+                        cells[row][col].conflict = true;
+                        cells[row][col].paint();
+                        conflictExists = true;
+                    }
+                }
+            }
+        }
+
+        //Update sourceCell last, if exists atleast 1 conflict => conflictExists = true, else false
+        cells[sourceRow][sourceCol].conflict = conflictExists;
+        cells[sourceRow][sourceCol].paint();
+    }
+
+    //Method to update the Cells Remaining: Label
+    public void updateStatus() {
+        int cellsLeft = 0;
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+                if (cells[row][col].status==CellStatus.TO_GUESS) {
+                    cellsLeft += 1;
+                }
+            }
+        }
+        mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
+    }
+
+    //Method to facilitate Hint System
+    //Changes a TO_GUESS or GUESSED to the cells number
+    public void reveal(int numOfCells) {
+        int randRow,randCol;
+        for (int i=0; i < numOfCells; ++i) {
+            do { //Checks if random cell has already been given or not
+                randRow = (int)(Math.random()*9);
+                randCol = (int)(Math.random()*9);
+                //Repeats until a cell is found with a number that differs from its base cell number
+                if (cells[randRow][randCol].status==CellStatus.TO_GUESS) {
+                    break; //CASE when .getText() returns "" so Integer.parseInt() doesnt throw exception
+                }
+            } while (cells[randRow][randCol].number==Integer.parseInt(cells[randRow][randCol].getText()));
+
+            //Changes cell to given
+            cells[randRow][randCol].status = CellStatus.GIVEN;
+            cells[randRow][randCol].hinted = true;
+            cells[randRow][randCol].paint();
+            cells[randRow][randCol].removeKeyListener(listener);
+
+            //Updates all dynamically updating things
+            updateStatus();
+            updateConflict(cells[randRow][randCol]);
+
+
+            //Checks if revealing hint completes sudoku
+            if (isSolved()) {
+                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                //Disables input after winning
+                for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+                    for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                        cells[row][col].setEditable(false);
+                        cells[row][col].removeKeyListener(listener);
+                    }
+                }
+                break; //Exits out of loop so no more hints if sudoku completed from previous hint
+            }
+        } 
+    }
+
+    //Custom nested KeyListener class for input into cells
     private class CellInputListener implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {   
@@ -227,131 +355,6 @@ public class GameBoardPanel extends JPanel {
                 //Case when invalid + cell.getText().length > 1 already covered
             }
         }
-    }
-
-    //Checks and updates any conflict from the cell of specified row and col after input
-    public void updateConflict(Cell sourceCell) {
-        int sourceRow = sourceCell.row;
-        int sourceCol = sourceCell.col;
-        int sourceInput = Integer.parseInt(sourceCell.getText());
-        int cellNumber;
-        boolean conflictExists = false;
-
-        //Check for same number in row
-        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
-            //If cell has yet to have any input, SKIP
-            if (!cells[row][sourceCol].getText().isEmpty()) {
-
-                //Checks the number on the cell with the sourceCell number
-                cellNumber = Integer.parseInt(cells[row][sourceCol].getText());
-
-                if (cellNumber == sourceInput && row!=sourceRow) { //Skips cell if it is sourceCell
-                    //Any cell that isnt sourceCell but has same number
-                    //set its conflict = true and paint()
-                    cells[row][sourceCol].conflict = true;
-                    cells[row][sourceCol].paint();
-                    conflictExists = true;
-                }
-            }
-        }
-
-        //Check for same number in col
-        for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
-            //If cell has yet to have any input, SKIP
-            if (!cells[sourceRow][col].getText().isEmpty()) {
-
-                //Checks the number on the cell with the sourceCell number
-                cellNumber = Integer.parseInt(cells[sourceRow][col].getText());
-
-                if (cellNumber == sourceInput && col!=sourceCol) { //Skips cell if it is sourceCell
-                    //Any cell that isnt sourceCell but has same number
-                    //set its conflict = true and paint()
-                    cells[sourceRow][col].conflict = true;
-                    cells[sourceRow][col].paint();
-                    conflictExists = true;
-                }
-            }
-        }
-
-        //Check for same number in 3x3
-        // Where the first number is the row in range and the second number is the col in range
-        // (0-2,0-2) | (0-2,3-5) | (0-2,6-8)
-        // (3-5,0-2) | (3-5,3-5) | (3-5,6-8)
-        // (6-8,0-2) | (6-8,3-5) | (6-8,6-8)
-        // e.g. Middle 3x3 starts at row 3, col 3 and ends with row 5, col 5
-        for (int row=3*(sourceRow/3) ; row < 3*(sourceRow/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
-            for (int col=3*(sourceCol/3) ; col < 3*(sourceCol/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
-                //If cell has yet to have any input, SKIP
-                if (!cells[row][col].getText().isEmpty()) {
-
-                    //Checks the number on the cell with the sourceCell number
-                    cellNumber = Integer.parseInt(cells[row][col].getText());
-
-                    //Skips cell if it its row or col is same as sourceCell, since it has been check previously
-                    if (cellNumber == sourceInput && col!=sourceCol && row!=sourceRow) { 
-                        //Any cell that isnt sourceCell but has same number
-                        //set its conflict = true and paint()
-                        cells[row][col].conflict = true;
-                        cells[row][col].paint();
-                        conflictExists = true;
-                    }
-                }
-            }
-        }
-
-        //Update sourceCell last, if exists atleast 1 conflict => conflictExists = true, else false
-        cells[sourceRow][sourceCol].conflict = conflictExists;
-        cells[sourceRow][sourceCol].paint();
-    }
-
-    public void updateStatus() {
-        int cellsLeft = 0;
-        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
-            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
-                if (cells[row][col].status==CellStatus.TO_GUESS) {
-                    cellsLeft += 1;
-                }
-            }
-        }
-        mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
-    }
-
-    //Method to facilitate Hint System
-    //Changes a TO_GUESS or GUESSED to the cells number
-    public void reveal(int numOfCells) {
-        int randRow,randCol;
-        for (int i=0; i < numOfCells; ++i) {
-            do { //Checks if random cell has already been given or not
-                randRow = (int)(Math.random()*9);
-                randCol = (int)(Math.random()*9);
-                //Repeats until a cell is found with a number that differs from its base cell number
-                if (cells[randRow][randCol].status==CellStatus.TO_GUESS) {
-                    break; //CASE when .getText() returns "" so Integer.parseInt() doesnt throw exception
-                }
-            } while (cells[randRow][randCol].number==Integer.parseInt(cells[randRow][randCol].getText()));
-
-            //Changes cell to given
-            cells[randRow][randCol].status = CellStatus.GIVEN;
-            cells[randRow][randCol].paint();
-
-            //Updates all dynamically updating things
-            updateStatus();
-            updateConflict(cells[randRow][randCol]);
-
-
-            //Checks if revealing hint completes sudoku
-            if (isSolved()) {
-                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
-                //Disables input after winning
-                for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
-                    for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-                        cells[row][col].setEditable(false);
-                        cells[row][col].removeKeyListener(listener);
-                    }
-                }
-                break; //Exits out of loop so no more hints if sudoku completed from previous hint
-            }
-        } 
     }
 
 }

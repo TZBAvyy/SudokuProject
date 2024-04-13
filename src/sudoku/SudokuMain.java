@@ -67,6 +67,7 @@ public class SudokuMain extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // to handle window-closing
         setTitle("Sudoku");
         setVisible(true);
+        setLocationRelativeTo(null); // Opens Sudoku Screen in middle of screen
     }
 
     /** The entry main() entry method */

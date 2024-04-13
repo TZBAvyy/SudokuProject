@@ -19,6 +19,7 @@ public class Cell extends JTextField {
     public static final Color BG_WRONG_GUESS   = new Color(216, 0, 0);
     public static final Color FG_GIVEN_CONFLICT = new Color(240, 0, 0);
     public static final Color FG_GUESSED = Color.WHITE;
+    public static final Color FG_HINTED = Color.BLUE;
     public static final Font FONT_NUMBERS = new Font("OCR A Extended", Font.PLAIN, 28);
 
     // Define properties (package-visible)
@@ -30,6 +31,8 @@ public class Cell extends JTextField {
     CellStatus status;
     //Conflict Status
     boolean conflict = false;
+    //Hint Status
+    boolean hinted = false;
 
     /** Constructor */
     public Cell(int row, int col) {
@@ -54,7 +57,11 @@ public class Cell extends JTextField {
             // Inherited from JTextField: Set display properties
             super.setText(number + "");
             super.setEditable(false);
-            super.setForeground(FG_GIVEN);
+            if (hinted) {
+                super.setForeground(FG_HINTED);
+            } else {
+                super.setForeground(FG_GIVEN);
+            }
             if (conflict) {
                 super.setBackground(BG_WRONG_GUESS);
             } else {
