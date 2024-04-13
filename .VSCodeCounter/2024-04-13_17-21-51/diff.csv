@@ -1,0 +1,8 @@
+"filename", "language", "Java", "Markdown", "comment", "blank", "total"
+"c:\JavaProjects\Sudoku\README.md", "Markdown", 0, 17, 0, 0, 17
+"c:\JavaProjects\Sudoku\src\sudoku\Cell.java", "Java", 6, 0, 1, 0, 7
+"c:\JavaProjects\Sudoku\src\sudoku\GameBoardPanel.java", "Java", 32, 0, 11, 6, 49
+"c:\JavaProjects\Sudoku\src\sudoku\Puzzle.java", "Java", 3, 0, -3, 0, 0
+"c:\JavaProjects\Sudoku\src\sudoku\SudokuMain.java", "Java", 1, 0, 0, 0, 1
+"c:\JavaProjects\Sudoku\src\sudoku\SudokuMenu.java", "Java", 10, 0, 3, 5, 18
+"Total", "-", 52, 17, 12, 11, 92
