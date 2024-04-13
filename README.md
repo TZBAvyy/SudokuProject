@@ -38,5 +38,3 @@ Code Written by Avisena Gibraltar: {
 | [src/sudoku/SudokuDifficulty.java](/src/sudoku/SudokuDifficulty.java) | Java | 4 | 0 | 2 | 6 |
 | [src/sudoku/SudokuMain.java](/src/sudoku/SudokuMain.java) | Java | 39 | 29 | 16 | 84 |
 | [src/sudoku/SudokuMenu.java](/src/sudoku/SudokuMenu.java) | Java | 53 | 12 | 20 | 85 |
-
-[Summary](results.md)
