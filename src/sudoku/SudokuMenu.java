@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class SudokuMenu extends JMenuBar{
     JMenu fileMenu, optionMenu, helpMenu;
-    JMenuItem newGameItem, resetGameItem, exitItem, difficultyItem;
+    JMenuItem newGameItem, resetGameItem, exitItem, difficultyItem, hintItem;
 
     public SudokuMenu(SudokuMain mainProgram) {
         super();
@@ -56,7 +56,23 @@ public class SudokuMenu extends JMenuBar{
 
         //Init helpMenu object
         helpMenu = new JMenu("Help");
+
         //[TODO] CREATE HINT SYSTEM HERE UNDER HELP MENU
+        //Initialise hintItem object
+        hintItem = new JMenuItem("Hint");
+
+        //Adds hint functionality to hintItem object
+        hintItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!mainProgram.board.isSolved()) {
+                    mainProgram.board.reveal(1);
+                }
+            }
+        });
+
+        //Adds hintItem object to helpMenu object
+        helpMenu.add(hintItem);
         
 
         //Add all Menu objects into MenuBar objecgt

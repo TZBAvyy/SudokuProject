@@ -312,4 +312,42 @@ public class GameBoardPanel extends JPanel {
         mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
     }
 
+    //Method to facilitate Hint System
+    //Changes a TO_GUESS or GUESSED to the cells number
+    public void reveal(int numOfCells) {
+        int randRow,randCol;
+        for (int i=0; i < numOfCells; ++i) {
+            do { //Checks if random cell has already been given or not
+                randRow = (int)(Math.random()*9);
+                randCol = (int)(Math.random()*9);
+                //Repeats until a cell is found with a number that differs from its base cell number
+                if (cells[randRow][randCol].status==CellStatus.TO_GUESS) {
+                    break; //CASE when .getText() returns "" so Integer.parseInt() doesnt throw exception
+                }
+            } while (cells[randRow][randCol].number==Integer.parseInt(cells[randRow][randCol].getText()));
+
+            //Changes cell to given
+            cells[randRow][randCol].status = CellStatus.GIVEN;
+            cells[randRow][randCol].paint();
+
+            //Updates all dynamically updating things
+            updateStatus();
+            updateConflict(cells[randRow][randCol]);
+
+
+            //Checks if revealing hint completes sudoku
+            if (isSolved()) {
+                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                //Disables input after winning
+                for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+                    for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                        cells[row][col].setEditable(false);
+                        cells[row][col].removeKeyListener(listener);
+                    }
+                }
+                break; //Exits out of loop so no more hints if sudoku completed from previous hint
+            }
+        } 
+    }
+
 }
