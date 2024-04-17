@@ -149,6 +149,59 @@ public class GameBoardPanel extends JPanel {
         return true;
     }
 
+    //Method to update the Cells Remaining: Label
+    public void updateStatus() {
+        int cellsLeft = 0;
+        for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
+            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+                if (cells[row][col].status==CellStatus.TO_GUESS) {
+                    cellsLeft += 1;
+                }
+            }
+        }
+        mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
+    }
+
+    //Method to facilitate Hint System
+    //Changes a TO_GUESS or GUESSED to the cells number
+    public void reveal(int numOfCells) {
+        int randRow,randCol;
+        for (int i=0; i < numOfCells; ++i) {
+            do { //Checks if random cell has already been given or not
+                randRow = (int)(Math.random()*9);
+                randCol = (int)(Math.random()*9);
+                //Repeats until a cell is found with a number that differs from its base cell number
+                if (cells[randRow][randCol].status==CellStatus.TO_GUESS) {
+                    break; //CASE when .getText() returns "" so Integer.parseInt() doesnt throw exception
+                }
+            } while (cells[randRow][randCol].number==Integer.parseInt(cells[randRow][randCol].getText()));
+
+            //Changes cell to given
+            cells[randRow][randCol].status = CellStatus.GIVEN;
+            cells[randRow][randCol].hinted = true;
+            cells[randRow][randCol].paint();
+            cells[randRow][randCol].removeKeyListener(listener);
+
+            //Updates all dynamically updating things
+            updateStatus();
+            updateConflict(cells[randRow][randCol]);
+
+
+            //Checks if revealing hint completes sudoku
+            if (isSolved()) {
+                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
+                //Disables input after winning
+                for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
+                    for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
+                        cells[row][col].setEditable(false);
+                        cells[row][col].removeKeyListener(listener);
+                    }
+                }
+                break; //Exits out of loop so no more hints if sudoku completed from previous hint
+            }
+        } 
+    }
+
     //Checks and updates any conflict from the cell of specified row and col after input
     public void updateConflict(Cell sourceCell) {
         int sourceRow = sourceCell.row;
@@ -224,110 +277,58 @@ public class GameBoardPanel extends JPanel {
         cells[sourceRow][sourceCol].paint();
     }
 
-    //Method to update the Cells Remaining: Label
-    public void updateStatus() {
-        int cellsLeft = 0;
+    //Erases cell text and any conflicts that arises from cell number
+    public void resetConflict(Cell sourceCell) {
+        //Remove everything in cell by setting status to TO_GUESS & conflict to false
+        sourceCell.status = CellStatus.TO_GUESS;
+        sourceCell.conflict = false;
+        sourceCell.paint();
+
+        //Check row, col and 3x3 for cells with conflict == true
+        //Then updateConflict() those cells
+        //IF only conflict was previously erased cell => it will remove conflict
+        //IF conflict still exists after cell was erased => keep conflict
         for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
-            for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
-                if (cells[row][col].status==CellStatus.TO_GUESS) {
-                    cellsLeft += 1;
+            if (cells[row][sourceCell.col].conflict) {
+                updateConflict(cells[row][sourceCell.col]);
+            }
+        }
+        for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
+            if (cells[sourceCell.row][col].conflict) {
+                updateConflict(cells[sourceCell.row][col]);
+            }
+        } //Same algorithm concept as in updateConflict()
+        for (int row=3*(sourceCell.row/3) ; row < 3*(sourceCell.row/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
+            for (int col=3*(sourceCell.col/3) ; col < 3*(sourceCell.col/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
+                if (cells[row][col].conflict) {
+                    updateConflict(cells[row][col]);
                 }
             }
         }
-        mainProgram.statusLabel.setText("Cells remaining: " + cellsLeft);
     }
-
-    //Method to facilitate Hint System
-    //Changes a TO_GUESS or GUESSED to the cells number
-    public void reveal(int numOfCells) {
-        int randRow,randCol;
-        for (int i=0; i < numOfCells; ++i) {
-            do { //Checks if random cell has already been given or not
-                randRow = (int)(Math.random()*9);
-                randCol = (int)(Math.random()*9);
-                //Repeats until a cell is found with a number that differs from its base cell number
-                if (cells[randRow][randCol].status==CellStatus.TO_GUESS) {
-                    break; //CASE when .getText() returns "" so Integer.parseInt() doesnt throw exception
-                }
-            } while (cells[randRow][randCol].number==Integer.parseInt(cells[randRow][randCol].getText()));
-
-            //Changes cell to given
-            cells[randRow][randCol].status = CellStatus.GIVEN;
-            cells[randRow][randCol].hinted = true;
-            cells[randRow][randCol].paint();
-            cells[randRow][randCol].removeKeyListener(listener);
-
-            //Updates all dynamically updating things
-            updateStatus();
-            updateConflict(cells[randRow][randCol]);
-
-
-            //Checks if revealing hint completes sudoku
-            if (isSolved()) {
-                JOptionPane.showMessageDialog(null, "Congratulations, you won!");
-                //Disables input after winning
-                for (int row = 0; row < SudokuConstants.GRID_SIZE; ++row) {
-                    for (int col = 0; col < SudokuConstants.GRID_SIZE; ++col) {
-                        cells[row][col].setEditable(false);
-                        cells[row][col].removeKeyListener(listener);
-                    }
-                }
-                break; //Exits out of loop so no more hints if sudoku completed from previous hint
-            }
-        } 
-    }
-
+    
     //Custom nested KeyListener class for input into cells
     private class CellInputListener implements KeyListener {
         @Override
-        public void keyTyped(KeyEvent e) {   
+        public void keyReleased(KeyEvent e) {   
         }
         @Override
         public void keyPressed(KeyEvent e) {    
         }
         @Override
-        public void keyReleased(KeyEvent e) {
+        public void keyTyped(KeyEvent e) {
             // Get a reference of the JTextField that triggers this action event
             Cell sourceCell = (Cell)e.getSource();
 
             //Checks if user inputs an character or presses back space to delete
-            if (e.getKeyCode()==KeyEvent.VK_BACK_SPACE) {
+            if (e.getKeyChar()==KeyEvent.VK_BACK_SPACE) {
                 //IF BACKSPACE
-                //Remove everything in cell by setting status to TO_GUESS & conflict to false
-                sourceCell.status = CellStatus.TO_GUESS;
-                sourceCell.conflict = false;
-                sourceCell.paint();
-
-                //Check row, col and 3x3 for cells with conflict == true
-                //Then updateConflict() those cells
-                //IF only conflict was previously erased cell => it will remove conflict
-                //IF conflict still exists after cell was erased => keep conflict
-                for (int row=0 ; row < SudokuConstants.GRID_SIZE ; ++row) {
-                    if (cells[row][sourceCell.col].conflict) {
-                        updateConflict(cells[row][sourceCell.col]);
-                    }
-                }
-                for (int col=0 ; col < SudokuConstants.GRID_SIZE ; ++col) {
-                    if (cells[sourceCell.row][col].conflict) {
-                        updateConflict(cells[sourceCell.row][col]);
-                    }
-                } //Same algorithm concept as in updateConflict()
-                for (int row=3*(sourceCell.row/3) ; row < 3*(sourceCell.row/3)+SudokuConstants.SUBGRID_SIZE ; ++row) {
-                    for (int col=3*(sourceCell.col/3) ; col < 3*(sourceCell.col/3)+SudokuConstants.SUBGRID_SIZE ; ++col) {
-                        if (cells[row][col].conflict) {
-                            updateConflict(cells[row][col]);
-                        }
-                    }
-                }
+                resetConflict(sourceCell);
                 updateStatus();
 
-            //Checks for any input that increases length of text to >1
-            } else if (sourceCell.getText().length()>1) {
-                //Sets the sourceCell's text to a substring of its text minus last character
-                sourceCell.setText(sourceCell.getText().substring(0,sourceCell.getText().length()-1));
+            //IF USER ENTERS 1-9 => VALID INPUT
+            } else if (e.getKeyChar()>=KeyEvent.VK_1 && e.getKeyChar()<=KeyEvent.VK_9) {
 
-            //IF USER ENTERS 1-9
-            } else if (e.getKeyCode()>=KeyEvent.VK_1 && e.getKeyCode()<=KeyEvent.VK_9) {
                 /* [CHANGED TO NEW DYNAMIC GUESSING]
                 if (numberIn == sourceCell.number) { //Check the numberIn against sourceCell.number.
                     sourceCell.status = CellStatus.CORRECT_GUESS;
@@ -335,11 +336,17 @@ public class GameBoardPanel extends JPanel {
                     sourceCell.status = CellStatus.WRONG_GUESS;
                 }
                 */
-                
+
+                resetConflict(sourceCell); //Resets any conflict from the cell if any
+
                 sourceCell.status = CellStatus.GUESSED;
-                updateConflict(sourceCell);
-                updateStatus();
-               
+
+                sourceCell.setText("" + e.getKeyChar()); //Preps the cell for updateConflict
+                updateConflict(sourceCell); //Updates any conflict based on new input
+                sourceCell.setText(""); //Erases text so input gets registered and entered into cell
+
+                updateStatus(); //Updates the remaining cells left label
+
                 //Checks if user has solved puzzle after move, if so => Congratulation JOptionPane
                 if (isSolved()) {
                     JOptionPane.showMessageDialog(null, "Congratulations, you won!");
@@ -351,12 +358,10 @@ public class GameBoardPanel extends JPanel {
                         }
                     }
                 }
+                
             } else { //If invalid input
-                if (sourceCell.status==CellStatus.TO_GUESS) {
-                    //To ensure only resets cell if invalid input is in empty cell
-                    sourceCell.setText("");
-                }
-                //Case when invalid + cell.getText().length > 1 already covered
+                e.consume(); //Consumes the key event if invalid
+                JOptionPane.showMessageDialog(null,"Invalid Input!");
             }
         }
     }
