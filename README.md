@@ -29,13 +29,15 @@ Code Written by Avisena Gibraltar: {
 ## Total Lines Written
 | filename | language | code | comment | blank | total |
 | :--- | :--- | ---: | ---: | ---: | ---: |
-| [README.md](/README.md) | Markdown | 39 | 0 | 7 | 46 |
+| [README.md](/README.md) | Markdown | 36 | 0 | 6 | 42 |
 | [src/sudoku/Cell.java](/src/sudoku/Cell.java) | Java | 63 | 21 | 5 | 89 |
 | [src/sudoku/CellStatus.java](/src/sudoku/CellStatus.java) | Java | 8 | 6 | 0 | 14 |
 | [src/sudoku/DifficultySelectListener.java](/src/sudoku/DifficultySelectListener.java) | Java | 57 | 19 | 19 | 95 |
-| [src/sudoku/GameBoardPanel.java](/src/sudoku/GameBoardPanel.java) | Java | 228 | 90 | 42 | 360 |
+| [src/sudoku/GameBoardPanel.java](/src/sudoku/GameBoardPanel.java) | Java | 232 | 90 | 42 | 364 |
+| [src/sudoku/MainMenuPanel.java](/src/sudoku/MainMenuPanel.java) | Java | 62 | 9 | 20 | 91 |
 | [src/sudoku/Puzzle.java](/src/sudoku/Puzzle.java) | Java | 85 | 35 | 27 | 147 |
 | [src/sudoku/SudokuConstants.java](/src/sudoku/SudokuConstants.java) | Java | 5 | 5 | 0 | 10 |
 | [src/sudoku/SudokuDifficulty.java](/src/sudoku/SudokuDifficulty.java) | Java | 4 | 0 | 2 | 6 |
-| [src/sudoku/SudokuMain.java](/src/sudoku/SudokuMain.java) | Java | 39 | 29 | 16 | 84 |
-| [src/sudoku/SudokuMenu.java](/src/sudoku/SudokuMenu.java) | Java | 53 | 12 | 20 | 85 |
+| [src/sudoku/SudokuMain.java](/src/sudoku/SudokuMain.java) | Java | 45 | 31 | 18 | 94 |
+| [src/sudoku/SudokuMenu.java](/src/sudoku/SudokuMenu.java) | Java | 62 | 12 | 21 | 95 |
+| Total Java | Java | 623 | 228 | 154 | 1,005 |
