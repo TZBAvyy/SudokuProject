@@ -1,0 +1,39 @@
+Date : 2024-04-18 13:06:00
+Directory : c:\JavaProjects\Sudoku
+Total : 11 files,  659 codes, 225 comments, 165 blanks, all 1049 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         10 |        621 |        225 |        159 |      1,005 |
+| Markdown |          1 |         38 |          0 |          6 |         44 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                               |         11 |        659 |        225 |        165 |      1,049 |
+| . (Files)                                                       |          1 |         38 |          0 |          6 |         44 |
+| src                                                             |         10 |        621 |        225 |        159 |      1,005 |
+| src\sudoku                                                      |         10 |        621 |        225 |        159 |      1,005 |
++-----------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                        | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\JavaProjects\Sudoku\README.md                                | Markdown |         38 |          0 |          6 |         44 |
+| c:\JavaProjects\Sudoku\src\sudoku\Cell.java                     | Java     |         65 |         21 |          5 |         91 |
+| c:\JavaProjects\Sudoku\src\sudoku\CellStatus.java               | Java     |          8 |          6 |          0 |         14 |
+| c:\JavaProjects\Sudoku\src\sudoku\DifficultySelectListener.java | Java     |         57 |         19 |         19 |         95 |
+| c:\JavaProjects\Sudoku\src\sudoku\GameBoardPanel.java           | Java     |        228 |         87 |         47 |        362 |
+| c:\JavaProjects\Sudoku\src\sudoku\MainMenuPanel.java            | Java     |         62 |          9 |         20 |         91 |
+| c:\JavaProjects\Sudoku\src\sudoku\Puzzle.java                   | Java     |         85 |         35 |         27 |        147 |
+| c:\JavaProjects\Sudoku\src\sudoku\SudokuConstants.java          | Java     |          5 |          5 |          0 |         10 |
+| c:\JavaProjects\Sudoku\src\sudoku\SudokuDifficulty.java         | Java     |          4 |          0 |          2 |          6 |
+| c:\JavaProjects\Sudoku\src\sudoku\SudokuMain.java               | Java     |         45 |         31 |         18 |         94 |
+| c:\JavaProjects\Sudoku\src\sudoku\SudokuMenu.java               | Java     |         62 |         12 |         21 |         95 |
+| Total                                                           |          |        659 |        225 |        165 |      1,049 |
++-----------------------------------------------------------------+----------+------------+------------+------------+------------+
