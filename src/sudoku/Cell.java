@@ -47,6 +47,8 @@ public class Cell extends JTextField {
     /** Reset this cell for a new game, given the puzzle number and isGiven */
     public void newGame(int number, boolean isGiven) {
         this.number = number;
+        this.conflict = false;
+        this.hinted = false;
         status = isGiven ? CellStatus.GIVEN : CellStatus.TO_GUESS;
         paint();    // paint itself
     }
