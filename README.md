@@ -13,7 +13,7 @@ Code Written by Avisena Gibraltar: {
     Added borders to all cells to better distinguish sudoku squares
     Added button to the south to re-start the game via board.newGame() [CHANGED TO MENU BAR BUTTON IN FILE TAB]
     Added difficulty through SudokuDifficulty enum
-    Added button to the south to change difficulty of game
+    Added button to the south to change difficulty of game [CHANGED TO MENU BAR BUTTON IN FILE TAB]
     Implemented DifficultySelectListener to create JOptionPane to change difficulty
     Added label to show current difficulty level
     Remove hardcoded puzzle, generate puzzles from scratch
